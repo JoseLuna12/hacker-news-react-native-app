@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import Home from './pages/home';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import detail from './pages/detail';
+import * as Haptics from 'expo-haptics';
+
+const Stack = createNativeStackNavigator()
 
 export default function App() {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="home">
+        <Stack.Screen
+          name="home"
+          component={Home}
+          options={{ title: 'HR RN' }}
+        />
+        <Stack.Screen
+          name="detail"
+
+          component={detail}
+          listeners={
+            () => {
+              return {
+                transitionStart: () => {
+                  Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)
+                }
+              }
+            }
+          }
+          options={({ route }) => ({ title: route.params.title })}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
